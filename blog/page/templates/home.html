@@ -1,0 +1,54 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">View or Add Blog</h1>
+                </div>
+            </div>
+        </header>
+        <!-- Section-->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">   
+                    
+                    {% for post in posts %}
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            
+
+
+                            <!--A Preview image figure-->
+                            {% if post.post_image %}
+                                <figure class="mb-4"><img class="img-fluid rounded" src="{{post.post_image.url}}" alt="..." /></figure>
+                            {% else %}
+                                <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                            {% endif %}
+                            <!-- Post details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <strong><h5 class="fw-bolder">{{ post.post_title }}</h5></strong>
+                                    <!-- Product price-->
+                                    
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'post' post.id %}">View Post</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </section>
+
+{% endblock %}

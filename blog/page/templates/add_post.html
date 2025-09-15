@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Add Post</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Add Some New Post...</p>
+                </div>
+            </div>
+        </header>
+<br><br><br><br>
+<center>
+        <div class="container">
+            <div class="row">
+                    <br><br><br><br>
+                    <div class="col-md-6 offset-md-3">
+                        <br><br> 
+                        
+                        <strong>Post Information</strong> <br><br>
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <!-- Instead of {{post_form.as_p}} -->
+                            {{ post_form.post_title }}<br>
+                            {{ post_form.post_text }}<br><br>
+                            {{ post_form.post_image }}<br>
+
+                            <!-- Custom rendering for checkboxes -->
+                            <div class="form-group">
+                                <label>{{ post_form.tag_category.label }}</label>
+                                {% for choice in post_form.tag_category %}
+                                    <div class="form-check">
+                                        {{ choice.tag }}
+                                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                            {{ choice.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <br><br>
+                            <button type="submit" class="btn btn-secondary">Add Post</button>
+                            <br><br><br><br>
+                        </form>
+                        <br><br>
+                    </div>
+                    <br><br><br><br>
+            </div>
+        </div>
+        </center>
+{% endblock %}

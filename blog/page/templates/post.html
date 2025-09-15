@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+        <!-- Page content-->
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Post content-->
+                    <article>
+                        <!-- Post header-->
+                            
+                            <!-- Preview image figure-->
+                            {% if post.post_image %}
+                                <figure class="mb-4"><img class="img-fluid rounded" src="{{post.post_image.url}}" alt="..." /></figure>
+                            {% else %}
+                                <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                            {% endif %}
+                            
+                            <header class="mb-4">
+                                <!-- Post title-->
+                                <h1 class="fw-bolder mb-1">{{post.post_title}}</h1>
+                                
+                                <!-- Post meta content-->
+                                <div class="text-muted fst-italic mb-2">{{post.data_time}}</div>
+                                <!-- Post categories-->
+                                {% for tag_item in post.tag_category.all %}
+                                <a class="badge bg-secondary text-decoration-none link-light" href="{% url 'tag' tag_item.name %}">{{tag_item}}</a>
+                                {% endfor %}
+                            </header>                           
+                                <!-- Post content-->
+                            <section class="mb-5">
+                                <p class="fs-5 mb-4">{{post.post_text}}</p>
+                            </section>
+                        </article>
+
+
+                    <!-- Comments section-->
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <form class="mb-4" method="POST" action="{% url 'post' pk=post.id %}">
+                                {% csrf_token %}
+                                <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" name="comment"></textarea>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Add Comment</button>
+                            </form>
+                            
+                            {% for item in comments_with_children %}
+                                <!-- Parent comment-->
+                                <div class="d-flex mb-4">
+                                    {% if item.comment.commenter_name.profile_picture %}
+                                        <div class="flex-shrink-0"><img class="rounded-circle" src="{{item.comment.commenter_name.profile_picture.url}}" style="width: 40px; height: 40px; object-fit: cover;" alt="..." /></div>
+                                    {% else %}
+                                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" style="width: 40px; height: 40px; object-fit: cover;" alt="..." /></div>
+                                    {% endif %}
+                                    <div class="ms-3">
+                                        <div class="fw-bold">{{item.comment.commenter_name}}</div>
+                                        {{item.comment.comment}}
+                                        <br>
+                                        
+                                        <!-- Child Comment form-->
+                                        <form class="mb-4" method="POST" action="{% url 'post' pk=post.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="parent_comment_id" value="{{item.comment.id}}">
+                                            <textarea class="form-control" rows="3" style="margin-top: 10px;" placeholder="Leave an Answer..." name="comment"></textarea>
+                                            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Add Your Answer</button>
+                                        </form>
+                                        
+                                        <!-- Display child comments -->
+                                        {% for child_comment in item.child_comments %}
+                                            <div class="d-flex mt-4">
+                                                {% if child_comment.commenter_name.profile_picture %}
+                                                    <div class="flex-shrink-0"><img class="rounded-circle" src="{{child_comment.commenter_name.profile_picture.url}}" style="width: 40px; height: 40px; object-fit: cover;" alt="..." /></div>
+                                                {% else %}
+                                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                                {% endif %}
+                                                <div class="ms-3">
+                                                    <div class="fw-bold">{{child_comment.commenter_name}}</div>
+                                                    {{child_comment.child_comment}}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+                </div>
+                <!-- Side widgets-->
+                <div class="col-lg-4">
+                    
+                    <!-- Side widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                {% if usr.profile_picture %}
+                                    <img class="rounded-circle me-2" src="{{usr.profile_picture.url}}" style="width: 40px; height: 40px; object-fit: cover;" alt="Profile Picture" />
+                                {% else %}
+                                    <img class="rounded-circle me-2" src="https://dummyimage.com/40x40/ced4da/6c757d.jpg" style="width: 40px; height: 40px; object-fit: cover;" alt="Default Avatar" />
+                                {% endif %}
+                                <span>
+                                    <a href="{% url 'user_profile_page' username=usr.user.username %}">
+                                    {{post.user.username}}'s
+                                    </a>last posts:
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if current_user_posts %}
+                                {% for info in current_user_posts %}
+                                    <div class="mb-2">
+                                        <a href="{% url 'post' pk=info.id %}" class="text-decoration-none">
+                                            {{info.post_title}}
+                                        </a>
+                                        <small class="text-muted d-block">{{info.date_time|date:"M d, Y"}}</small>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">No other posts yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+{% endblock %}
+

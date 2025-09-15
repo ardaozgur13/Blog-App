@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <!-- Profile Section -->
+    <div class="row mt-5">
+        <!-- Personal Info - Left Side -->
+        <div class="col-md-8">
+            <div class="profile-info">
+                <h2 class="mb-3">{{ current_user.name }} {{current_user.surname}}</h2>
+                
+                <div class="info-item mb-2">
+                    <strong>Username:</strong> {{ current_user.user.username }}
+                </div>
+                
+                {% if current_user.email %}
+                <div class="info-item mb-2">
+                    <strong>Email:</strong> {{ current_user.email }}
+                </div>
+                {% endif %}
+                
+                {% if current_user.about %}
+                <div class="info-item mb-2">
+                    <strong>About:</strong> {{ current_user.about }}
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+        
+        <!-- Profile Picture - Right Side -->
+        <div class="col-md-4 text-center">
+            {% if current_user.profile_picture %}
+                <img class="img-fluid profile-picture" src="{{ current_user.profile_picture.url }}" alt="Profile Picture" />
+            {% else %}
+                <img class="img-fluid profile-picture" src="https://dummyimage.com/300x300/ced4da/6c757d.jpg" alt="Default Profile Picture" />
+            {% endif %}
+        </div>
+    </div>
+    
+    <hr class="my-5">
+        {% if posts %}
+                <section class="py-5">
+                        <div class="container px-4 px-lg-5 mt-5">
+                            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">   
+                                
+                                {% for post in posts %}
+                                <div class="col mb-5">
+                                    <div class="card h-100">
+                                        
+
+
+                                        <!--A Preview image figure-->
+                                        {% if post.post_image %}
+                                            <figure class="mb-4"><img class="img-fluid rounded" src="{{post.post_image.url}}" alt="..." /></figure>
+                                        {% else %}
+                                            <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                                        {% endif %}
+                                        <!-- Post details-->
+                                        <div class="card-body p-4">
+                                            <div class="text-center">
+                                                <!-- Product name-->
+                                                <strong><h5 class="fw-bolder">{{ post.post_title }}</h5></strong>
+                                                <!-- Product price-->
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- Product actions-->
+                                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'post' post.id %}">View Post</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </section>
+                
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="9" cy="9" r="2"/>
+                            <path d="M21 15l-3.086-3.086a2 2 0 00-2.828 0L6 21"/>
+                        </svg>
+                    </div>
+                    <h3>No Posts Yet</h3>
+                    <p class="text-muted">When you share posts, they'll appear here.</p>
+                </div>
+            {% endif %}
+        
+    
+</div>
+
+<style>
+.profile-picture {
+    border-radius: 50%;
+    max-width: 250px;
+    width: 100%;
+    height: auto;
+    border: 3px solid #dee2e6;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.profile-info {
+    padding: 20px 0;
+}
+
+.info-item {
+    font-size: 1.1rem;
+}
+
+.info-item strong {
+    color: #495057;
+    min-width: 120px;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .profile-picture {
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+    
+    .col-md-8, .col-md-4 {
+        text-align: center;
+    }
+    
+    .info-item strong {
+        min-width: auto;
+        display: block;
+    }
+}
+</style>
+
+{% endblock %}
